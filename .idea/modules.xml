@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/registration/registration.iml" filepath="$PROJECT_DIR$/registration/registration.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/registration_service.iml" filepath="$PROJECT_DIR$/.idea/registration_service.iml" />
     </modules>
   </component>
