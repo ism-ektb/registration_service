@@ -1,0 +1,4 @@
+server:
+  port: 8084
+client:
+  uri: http://localhost:8082
