@@ -1,5 +1,6 @@
 package aleksey.registration.service;
 
+import aleksey.registration.client.EventClientImpl;
 import aleksey.registration.dto.request.RegistrationRequestCreate;
 import aleksey.registration.dto.request.RegistrationRequestDelete;
 import aleksey.registration.dto.request.RegistrationRequestUpdate;
@@ -22,12 +23,17 @@ import java.util.List;
 public class RegistrationService {
 
     private final RegistrationRepository registrationRepository;
+    private final EventClientImpl eventClient;
 
 
     @Transactional
     public RegistrationResponseCreate create(final RegistrationRequestCreate registrationRequestCreate,
                                              final Long eventId) {
-        return null;
+        eventClient.getEvent(eventId)
+                .orElseThrow(() -> new RuntimeException("event not found"));
+        return RegistrationMapper.mapCreate(
+                registrationRepository.save(RegistrationMapper.map(registrationRequestCreate, eventId))
+        );
     }
 
 

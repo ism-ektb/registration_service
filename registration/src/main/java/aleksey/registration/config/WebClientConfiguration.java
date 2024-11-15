@@ -1,5 +1,6 @@
 package aleksey.registration.config;
 
+import aleksey.registration.client.EventClientImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,11 +17,11 @@ public class WebClientConfiguration {
 
 
     @Bean
-    public WebClient webClient() {
-        return WebClient.builder()
+    public EventClientImpl eventClient() {
+        return new EventClientImpl(WebClient.builder()
                 .baseUrl(this.baseUri)
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .build();
+                .build());
     }
 
 
