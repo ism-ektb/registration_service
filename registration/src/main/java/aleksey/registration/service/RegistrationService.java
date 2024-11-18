@@ -29,8 +29,6 @@ public class RegistrationService {
     @Transactional
     public RegistrationResponseCreate create(final RegistrationRequestCreate registrationRequestCreate,
                                              final Long eventId) {
-        eventClient.getEvent(eventId)
-                .orElseThrow(() -> new RuntimeException("event not found"));
         return RegistrationMapper.mapCreate(
                 registrationRepository.save(RegistrationMapper.map(registrationRequestCreate, eventId))
         );
@@ -68,6 +66,7 @@ public class RegistrationService {
     }
 
 
+    @Transactional
     public void delete(final RegistrationRequestDelete registrationRequestDelete) {
         if (
                 registrationRepository.findById(registrationRequestDelete.getId())

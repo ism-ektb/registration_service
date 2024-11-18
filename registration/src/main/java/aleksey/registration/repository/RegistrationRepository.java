@@ -10,6 +10,5 @@ import java.util.Optional;
 
 @Repository
 public interface RegistrationRepository extends JpaRepository<Registration, Long> {
-    Optional<Registration> findById(Long id);
     List<Registration> findAllByEventId(Long eventId, Pageable pageable);
 }

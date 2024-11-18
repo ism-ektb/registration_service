@@ -8,6 +8,7 @@ import aleksey.registration.dto.response.RegistrationResponseCreate;
 import aleksey.registration.dto.response.RegistrationResponseGet;
 import aleksey.registration.dto.response.RegistrationResponseUpdate;
 import aleksey.registration.service.RegistrationService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -22,14 +23,14 @@ public class RegistrationController {
     private final RegistrationService registrationService;
 
     @PostMapping("/{eventId}")
-    public RegistrationResponseCreate create(@RequestBody @Validated RegistrationRequestCreate registrationRequestCreate,
+    public RegistrationResponseCreate create(@RequestBody @Valid RegistrationRequestCreate registrationRequestCreate,
                                              @PathVariable Long eventId) {
         return registrationService.create(registrationRequestCreate, eventId);
     }
 
 
     @PatchMapping
-    public RegistrationResponseUpdate update(@RequestBody @Validated RegistrationRequestUpdate update) {
+    public RegistrationResponseUpdate update(@RequestBody @Valid RegistrationRequestUpdate update) {
         return registrationService.update(update);
     }
 
@@ -40,8 +41,8 @@ public class RegistrationController {
 
     @GetMapping
     public List<RegistrationResponseGet> getAll(@RequestParam Long eventId,
-                                                @RequestParam Integer page,
-                                                @RequestParam Integer size) {
+                                                @RequestParam(defaultValue = "1") Integer page,
+                                                @RequestParam(defaultValue = "100") Integer size) {
         return registrationService.getAll(eventId, page, size);
     }
 

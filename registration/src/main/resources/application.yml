@@ -4,8 +4,8 @@ client:
   uri: http://localhost:8082
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5433/postgres
-    password: pass
-    username: postgres
+    url: ${SPRING_DATASOURCE_URL}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    username: ${SPRING_DATASOURCE_USERNAME}
   jpa:
     open-in-view: false
