@@ -3,14 +3,13 @@ package aleksey.registration.controller;
 
 import aleksey.registration.dto.request.RegistrationRequestCreate;
 import aleksey.registration.dto.request.RegistrationRequestDelete;
+import aleksey.registration.dto.request.RegistrationRequestPatch;
 import aleksey.registration.dto.request.RegistrationRequestUpdate;
-import aleksey.registration.dto.response.RegistrationResponseCreate;
-import aleksey.registration.dto.response.RegistrationResponseGet;
-import aleksey.registration.dto.response.RegistrationResponseUpdate;
+import aleksey.registration.dto.response.*;
+import aleksey.registration.model.RegistrationState;
 import aleksey.registration.service.RegistrationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -51,5 +50,27 @@ public class RegistrationController {
         registrationService.delete(registrationRequestDelete);
     }
 
+    @PatchMapping("/states")
+    public List<RegistrationResponsePatch> changeOfStateByResponsibleUser(@RequestHeader("X-Sharer-User-Id") long userId,
+                                                   @RequestParam("state") RegistrationState status,
+                                                   @RequestParam("ids") List<Long> registrationIds,
+                                                   @Valid @RequestBody(required = false) RegistrationRequestPatch description) {
+        return registrationService.changeOfStateByResponsibleUser(userId,
+                status,
+                registrationIds,
+                description);
+    }
 
+    @GetMapping("/states")
+    public List<RegistrationResponseGetStates> getWithStates(@RequestHeader("X-Sharer-User-Id") long userId,
+                                                             @RequestParam("states") List<RegistrationState> statuses,
+                                                             @RequestParam("eventId") Long eventId) {
+        return registrationService.getWithStates(userId, statuses, eventId);
+    }
+
+    @GetMapping("/states/{eventId}")
+    public RegistrationCountedStates getWithCountedStates(@RequestHeader("X-Sharer-User-Id") long userId,
+                                                          @PathVariable("eventId") Long eventId) {
+        return registrationService.getWithCountedStates(userId, eventId);
+    }
 }

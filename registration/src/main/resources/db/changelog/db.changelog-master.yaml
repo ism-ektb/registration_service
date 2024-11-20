@@ -1,3 +1,5 @@
 databaseChangeLog:
   - include:
-      file: db/changelog/db.changelog-1.0.sql
+      file: db/changelog/changeset/db.changelog-1.0.sql
+  - include:
+      file: db/changelog/changeset/add-columns-in-registration-table.sql
