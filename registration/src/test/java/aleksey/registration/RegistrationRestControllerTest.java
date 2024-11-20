@@ -4,6 +4,7 @@ package aleksey.registration;
 import aleksey.registration.controller.RegistrationController;
 import aleksey.registration.dto.request.RegistrationRequestCreate;
 import aleksey.registration.dto.request.RegistrationRequestDelete;
+import aleksey.registration.dto.request.RegistrationRequestPatch;
 import aleksey.registration.dto.request.RegistrationRequestUpdate;
 import aleksey.registration.dto.response.RegistrationResponseCreate;
 import aleksey.registration.dto.response.RegistrationResponseGet;
@@ -98,5 +99,30 @@ public class RegistrationRestControllerTest {
 
     }
 
+    @Test
+    @SneakyThrows
+    void changeRegistrationsStateByResponsibleUserTest() {
+        var request = new RegistrationRequestPatch("Вам отказано в доступе на мероприятие");
+        mvc.perform(patch("/registrations/states?state=CANCELED&ids=1")
+                .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8.name()).header("X-Sharer-User-Id", 1)
+                        .content(mapper.writeValueAsString(request))).andExpect(status().isOk());
+    }
 
+    @Test
+    @SneakyThrows
+    void getRegistrationsWithStates() {
+        mvc.perform(get("/registrations/states?states=CANCELED&eventId=1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                .characterEncoding(StandardCharsets.UTF_8.name()).header("X-Sharer-User-Id", 1))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @SneakyThrows
+    void getRegistrationsWithCountedStatesTest() {
+        mvc.perform(get("/registrations/states/1").contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8.name()).header("X-Sharer-User-Id", 1))
+                .andExpect(status().isOk());
+    }
 }

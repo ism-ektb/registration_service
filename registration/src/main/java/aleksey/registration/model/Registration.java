@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Getter
@@ -29,6 +30,9 @@ public class Registration {
     private Long eventId;
     @Column(name = "password")
     private String password;
+    @Enumerated(EnumType.STRING)
+    private RegistrationState state;
+    private LocalDateTime createdDateTime;
 
     @Override
     public final boolean equals(Object object) {
@@ -44,5 +48,15 @@ public class Registration {
     @Override
     public final int hashCode() {
         return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
+    }
+
+    @PrePersist
+    private void initializeDefaultValue() {
+        if (state == null) {
+            state = RegistrationState.PENDING;
+        }
+        if (createdDateTime == null) {
+            createdDateTime = LocalDateTime.now();
+        }
     }
 }
