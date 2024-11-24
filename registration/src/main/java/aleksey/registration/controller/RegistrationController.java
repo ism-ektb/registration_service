@@ -1,6 +1,5 @@
 package aleksey.registration.controller;
 
-
 import aleksey.registration.dto.request.RegistrationRequestCreate;
 import aleksey.registration.dto.request.RegistrationRequestDelete;
 import aleksey.registration.dto.request.RegistrationRequestPatch;
@@ -24,12 +23,13 @@ public class RegistrationController {
     @PostMapping("/{eventId}")
     public RegistrationResponseCreate create(@RequestBody @Valid RegistrationRequestCreate registrationRequestCreate,
                                              @PathVariable Long eventId) {
+
         return registrationService.create(registrationRequestCreate, eventId);
     }
 
-
     @PatchMapping
     public RegistrationResponseUpdate update(@RequestBody @Valid RegistrationRequestUpdate update) {
+
         return registrationService.update(update);
     }
 
