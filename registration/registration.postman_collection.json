@@ -1,0 +1,421 @@
+{
+	"info": {
+		"_postman_id": "751ff6f6-98b4-41ab-8667-c1b57c9ba8a0",
+		"name": "registration",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31538435"
+	},
+	"item": [
+		{
+			"name": "create",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.response.to.be.withBody;\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"\r",
+							"const source = JSON.parse(pm.request.body.raw);\r",
+							"const target = pm.response.json();\r",
+							"pm.globals.set('reg1', source);\r",
+							"pm.globals.set('id1', target.id);\r",
+							"pm.globals.set('pass1', target.password)\r",
+							"\r",
+							"pm.test(\"Ответ должен содержать поля: id, password\", function () {\r",
+							"pm.expect(target).to.have.property('id');\r",
+							"pm.expect(target).to.have.property('password');\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"username\": \"username_46f2fefc9590\",\r\n  \"email\": \"email@email.ru\",\r\n  \"phone\": \"phone_9f65a4632e0c\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/1",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "addRegistration2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.response.to.be.withBody;\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"\r",
+							"const source = JSON.parse(pm.request.body.raw);\r",
+							"const target = pm.response.json();\r",
+							"pm.globals.set('reg2', source)\r",
+							"pm.globals.set('id2', target.id);\r",
+							"pm.globals.set('pass2', target.password)\r",
+							"\r",
+							"pm.test(\"Ответ должен содержать поля: id, password\", function () {\r",
+							"pm.expect(target).to.have.property('id');\r",
+							"pm.expect(target).to.have.property('password');\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"username\": \"2username_46f2fefc9590\",\r\n  \"email\": \"2email@email.ru\",\r\n  \"phone\": \"2phone_9f65a4632e0c\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/1",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "addRegistration3",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.response.to.be.withBody;\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"\r",
+							"const source = JSON.parse(pm.request.body.raw);\r",
+							"const target = pm.response.json();\r",
+							"pm.globals.set('id3', target.id);\r",
+							"pm.globals.set('pass3', target.password)\r",
+							"\r",
+							"pm.test(\"Ответ должен содержать поля: id, password\", function () {\r",
+							"pm.expect(target).to.have.property('id');\r",
+							"pm.expect(target).to.have.property('password');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"username\": \"2username_46f2fefc9590\",\r\n  \"email\": \"2email@email.ru\",\r\n  \"phone\": \"2phone_9f65a4632e0c\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/2",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateRegistration",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.response.to.be.withBody;\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"\r",
+							"const source = JSON.parse(pm.request.body.raw);\r",
+							"const target = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Ответ должен содержать поля: username, email, phone\", function () {\r",
+							"pm.expect(target).to.have.property('username');\r",
+							"pm.expect(target).to.have.property('email');\r",
+							"pm.expect(target).to.have.property('phone');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Данные в ответе должны соответствовать данным в запросе\", function () {\r",
+							"    pm.expect(target.username).equal(source.username, 'Имя пользователя должно соответствовать отправленному в запросе');\r",
+							"    pm.expect(target.email).equal(source.email, 'Почта пользователя должна соответствовать отправленной в запросе');\r",
+							"    pm.expect(target.phone).equal(source.phone, 'Телефон пользователя должен соответствовать телефону в запросе');\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"registrationId\": \"{{id3}}\",\r\n  \"password\": \"{{pass3}}\",\r\n  \"username\": \"newUserName\",\r\n  \"email\": \"emailnew@email\",\r\n  \"phone\": \"newPhone\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}",
+					"host": [
+						"{{baseUrl}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getRegistration",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
+							"    pm.response.to.have.status(200);  \r",
+							"    pm.response.to.be.withBody;\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"const source = pm.globals.get(\"reg1\");\r",
+							"const target = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Ответ должен содержать поля: username, email, phone, eventId\", function () {\r",
+							"pm.expect(target).to.have.property('username');\r",
+							"pm.expect(target).to.have.property('email');\r",
+							"pm.expect(target).to.have.property('phone');\r",
+							"pm.expect(target).to.have.property('eventId');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Данные в ответе должны соответствовать данным в запросе\", function () {\r",
+							"    pm.expect(target.username).equal(source.username, 'имя пользователя должно соответствовать имяни пользователя в запросе');\r",
+							"    pm.expect(target.email).equal(source.email, 'email должен соответствовать email в запросе');\r",
+							"    pm.expect(target.phone).equal(source.phone, 'телефон должен соответствовать телефону в запросе');\r",
+							"    pm.expect(target.eventId).equal(1, 'id события должно соответствовать id события в запросе');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/{{id1}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"{{id1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAllRegistration",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
+							"    pm.response.to.have.status(200);  \r",
+							"    pm.response.to.be.withBody;\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"const reg1 = pm.globals.get(\"reg1\");\r",
+							"const reg2 = pm.globals.get(\"reg2\");\r",
+							"const target = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Колличество регистраций в ответе должно соответствовать Колличеству регистраций в запросе\", function () {\r",
+							"    pm.expect(target.length, 'Должен вернуть 2 комментария').to.eql(2);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"регистрация 1 должна содержать поля: username, email, phone, eventId\", function () {\r",
+							"pm.expect(target[0]).to.have.property('username');\r",
+							"pm.expect(target[0]).to.have.property('email');\r",
+							"pm.expect(target[0]).to.have.property('phone');\r",
+							"pm.expect(target[0]).to.have.property('eventId');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Данные в ответе регистрации 1 должны соответствовать данным в запросе\", function () {\r",
+							"    pm.expect(target[0].username).equal(reg1.username, 'Имя  1 должно соответствовать имени в запросе');\r",
+							"    pm.expect(target[0].email).equal(reg1.email, 'email должен соответствовать email 1 в запросе');\r",
+							"    pm.expect(target[0].phone).equal(reg1.phone, 'телефон 1 должно соответствовать телефону в запросе');\r",
+							"    pm.expect(target[0].eventId).equal(1, 'id события должен соответствовать id события в запросе');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"регистрация 2 должна содержать поля: username, email, phone, eventId\", function () {\r",
+							"pm.expect(target[1]).to.have.property('username');\r",
+							"pm.expect(target[1]).to.have.property('email');\r",
+							"pm.expect(target[1]).to.have.property('phone');\r",
+							"pm.expect(target[1]).to.have.property('eventId');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Данные в ответе регистрации 1 должны соответствовать данным в запросе\", function () {\r",
+							"    pm.expect(target[1].username).equal(reg2.username, 'Имя  2 должно соответствовать имени в запросе');\r",
+							"    pm.expect(target[1].email).equal(reg2.email, 'email 2 должен соответствовать email 2 в запросе');\r",
+							"    pm.expect(target[1].phone).equal(reg2.phone, 'телефон 2 должно соответствовать телефону 2 в запросе');\r",
+							"    pm.expect(target[1].eventId).equal(1, 'id события 2 должен соответствовать id события 2 в запросе');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}?eventId=1",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"query": [
+						{
+							"key": "eventId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteRegistration",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Ответ должен содержать код статуса 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"id\": {{id2}},\r\n  \"password\": \"{{pass2}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}",
+					"host": [
+						"{{baseUrl}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8084/registrations",
+			"type": "string",
+			"disabled": true
+		},
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8084/registrations",
+			"type": "default"
+		}
+	]
+}
