@@ -18,5 +18,5 @@ jobs:
         with:
           java-version: 17
       - name: Maven Package
-        working-directory: ./registration
+        working-directory: ./registration1
         run: mvn -B clean test
