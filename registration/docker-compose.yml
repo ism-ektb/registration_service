@@ -1,25 +1,30 @@
-version: "3.8"
+# версия Docker Compose
+version: '3.8'
 
+# имена и описания контейнеров, которые должны быть развёрнуты
 services:
-  registration_service:
+  # описание контейнера db
+  db:
+    # образ, из которого должен быть запущен контейнер
+    image: postgres:13.7-alpine
+    # volume и связанная с ним директория в контейнере
+    volumes:
+      - /var/lib/postgresql/data/
+    # переменные окружения
+    environment:
+      - POSTGRES_PASSWORD=registration
+      - POSTGRES_USER=registration
+      - POSTGRES_DB=registration
+
+  web:
     build: .
-    image: registration_service
-    container_name: registration_service
     ports:
-      - "8084:8084"
+      - "8080:8080"
+    # "зависит от", - DB_NAME=later
     depends_on:
       - db
+    # переменные окружения
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/postgres
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=pass
-
-  db:
-    image: postgres:16.1
-    container_name: event-db
-    ports:
-      - "5433:5432"
-    environment:
-      - POSTGRES_PASSWORD=pass
-      - POSTGRES_USER=postgres
-      - POSTGRES_DB=postgres
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/registration
+      - SPRING_DATASOURCE_USERNAME=registration
+      - SPRING_DATASOURCE_PASSWORD=registration

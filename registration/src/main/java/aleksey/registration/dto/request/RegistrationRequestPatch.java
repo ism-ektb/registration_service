@@ -1,17 +1,16 @@
 package aleksey.registration.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Data
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class RegistrationRequestDelete {
-    @NotNull
-    private Long id;
+public class RegistrationRequestPatch {
     @NotBlank
-    private String password;
+    @Size(min = 20, max = 7000)
+    private String description;
 }

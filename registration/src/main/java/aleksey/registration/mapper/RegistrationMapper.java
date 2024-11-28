@@ -4,6 +4,7 @@ import aleksey.registration.dto.request.RegistrationRequestCreate;
 import aleksey.registration.dto.request.RegistrationRequestUpdate;
 import aleksey.registration.dto.response.RegistrationResponseCreate;
 import aleksey.registration.dto.response.RegistrationResponseGet;
+import aleksey.registration.dto.response.RegistrationResponseGetStates;
 import aleksey.registration.dto.response.RegistrationResponseUpdate;
 import aleksey.registration.model.Registration;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -54,6 +55,18 @@ public final class RegistrationMapper {
                 .username(registration.getUsername())
                 .email(registration.getEmail())
                 .phone(registration.getPhone())
+                .build();
+    }
+
+    public static RegistrationResponseGetStates mapGetStatuses(final Registration registration) {
+        return RegistrationResponseGetStates.builder()
+                .id(registration.getId())
+                .username(registration.getUsername())
+                .email(registration.getEmail())
+                .phone(registration.getPhone())
+                .eventId(registration.getEventId())
+                .state(registration.getState())
+                .createdDateTime(registration.getCreatedDateTime())
                 .build();
     }
 }
