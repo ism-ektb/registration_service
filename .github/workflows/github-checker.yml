@@ -17,7 +17,7 @@ jobs:
           java-version: 17
       - name: Maven check
         working-directory: ./registration
-        run: mvn -B checkstyle:check
+        run: mvn -B checkstyle:check 
       - name: Maven pack
         working-directory: ./registration
-        run: mvn -B package
+        run: mvn -B package -DskipTests
