@@ -1,15 +1,15 @@
 server:
-  port: 8084
+  port: 8080
 client:
   uri: http://localhost:8082
 spring:
   datasource:
- #   url: ${SPRING_DATASOURCE_URL}
- #   password: ${SPRING_DATASOURCE_PASSWORD}
- #   username: ${SPRING_DATASOURCE_USERNAME}
-    url: jdbc:postgresql://localhost:5433/registration
-    password: root
-    username: root
+    url: ${SPRING_DATASOURCE_URL}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    #   url: jdbc:postgresql://51.250.41.207:5432/registration
+    #  password: registration
+  #  username: registration
   jpa:
     open-in-view: false
     hibernate:
