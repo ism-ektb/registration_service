@@ -20,6 +20,6 @@ jobs:
       - name: Maven check
         working-directory: ./registration
         run: mvn -B checkstyle:check
-      - name: Maven test
+      - name: Maven pack
         working-directory: ./registration
-        run: mvn -B verify
+        run: mvn -B package
