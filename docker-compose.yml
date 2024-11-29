@@ -17,7 +17,7 @@ services:
       - POSTGRES_DB=registration
 
   web:
-    image: ghcr.io/ism-ektb/registration_service:main
+    image: ghcr.io/ism-ektb/registration_service
     restart: always
     ports:
       - "8080:8080"
