@@ -4,9 +4,10 @@ version: '3.8'
 # имена и  описания   контейнеров, которые должны быть развёрнуты
 services:
   # описание контейнера    db
-  db:
+  db-registration:
     # образ, из которого должен быть запущен контейнер
     image: postgres:13.7-alpine
+    container_name: db-registration
     # volume и связанная с ним директория в контейнере
     volumes:
       - /var/lib/postgresql/data/
@@ -16,15 +17,18 @@ services:
       - POSTGRES_USER=registration
       - POSTGRES_DB=registration
 
-  web:
+  web-registration:
+# при запуске на сервере меняем build на image
     build: .
+#   image: ghcr.io/ism-ektb/registration_service:main
+    container_name: web-registration
     ports:
-      - "8080:8080"
+      - "8085:8085"
     # "зависит от", - DB_NAME=later
     depends_on:
-      - db
+      - db-registration
     # переменные окружения
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/registration
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-registration:5432/registration
       - SPRING_DATASOURCE_USERNAME=registration
       - SPRING_DATASOURCE_PASSWORD=registration
