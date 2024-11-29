@@ -1,5 +1,5 @@
 # версия Docker Compose
-version: '3.8'
+version: '3'
 
 # имена и  описания   контейнеров, которые должны быть развёрнуты
 services:
@@ -16,6 +16,7 @@ services:
       - POSTGRES_PASSWORD=registration
       - POSTGRES_USER=registration
       - POSTGRES_DB=registration
+
 
   web-registration:
     # при запуске на сервере меняем build на image
