@@ -3,3 +3,5 @@ databaseChangeLog:
       file: db/changelog/changeset/db.changelog-1.0.sql
   - include:
       file: db/changelog/changeset/add-columns-in-registration-table.sql
+  - include:
+      file: db/changelog/changeset/add-userid-in-registration.sql

@@ -1,16 +1,23 @@
 package aleksey.registration.service;
 
-import aleksey.registration.client.EventClientImpl;
+import aleksey.registration.client.UserClient;
+import aleksey.registration.client.dto.UserOutDto;
 import aleksey.registration.dto.request.RegistrationRequestCreate;
 import aleksey.registration.dto.request.RegistrationRequestDelete;
 import aleksey.registration.dto.request.RegistrationRequestPatch;
 import aleksey.registration.dto.request.RegistrationRequestUpdate;
 import aleksey.registration.dto.response.*;
+import aleksey.registration.exception.exception.BaseRelationshipException;
+import aleksey.registration.exception.exception.NoFoundObjectException;
 import aleksey.registration.mapper.RegistrationMapper;
+import aleksey.registration.mapper.UserMapper;
 import aleksey.registration.model.Registration;
 import aleksey.registration.model.RegistrationState;
 import aleksey.registration.repository.RegistrationRepository;
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,18 +29,32 @@ import java.util.stream.Collectors;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Slf4j
 public class RegistrationService {
 
     private final RegistrationRepository registrationRepository;
-    private final EventClientImpl eventClient;
+    @Autowired
+    private UserClient userClient;
+    private final UserMapper userMapper;
 
 
     @Transactional
     public RegistrationResponseCreate create(final RegistrationRequestCreate registrationRequestCreate,
                                              final Long eventId) {
+        Registration registration = RegistrationMapper.map(registrationRequestCreate, eventId);
+        UserOutDto newUser = UserOutDto.builder().build();
+        try {
+            newUser = userClient.createUser(userMapper.registrationToUser(registration));
+        } catch (FeignException e) {
+            if (e.status() == 409) {
+                log.warn("Пользователь с логином {} или email {} уже зарегистрирован в user-service",
+                        registration.getUsername(), registration.getEmail());
+            } else throw new RuntimeException("Ошибка сохранения в User service");
+        }
+        registration.setUserId(newUser.getId());
+        Registration registration1 = registrationRepository.save(registration);
         return RegistrationMapper.mapCreate(
-                registrationRepository.save(RegistrationMapper.map(registrationRequestCreate, eventId))
-        );
+                registration1);
     }
 
 
@@ -71,7 +92,7 @@ public class RegistrationService {
     @Transactional
     public void delete(final RegistrationRequestDelete registrationRequestDelete) {
         Registration registration = registrationRepository.findById(registrationRequestDelete.getId())
-                .orElseThrow(() -> new RuntimeException("registration not found"));
+                .orElseThrow(() -> new NoFoundObjectException("registration not found"));
         if (registration.getPassword().equals(registrationRequestDelete.getPassword())) {
             registrationRepository.deleteById(registrationRequestDelete.getId());
             List<Registration> registrations = registrationRepository
@@ -83,6 +104,14 @@ public class RegistrationService {
             }
         } else {
             throw new RuntimeException("The floggings don't match");
+        }
+        if (registration.getUserId() != null) {
+            try {
+                userClient.deleteUser(registration.getUserId(), registration.getPassword());
+                log.info("Пользователь с userId= {} удален из user-service", registration.getId());
+            } catch (BaseRelationshipException e) {
+                log.warn("Пользователь с userId= {} не удален из user-service", registration.getId());
+            }
         }
     }
 

@@ -45,8 +45,9 @@ public class RegistrationRestControllerTest {
         var request = new RegistrationRequestCreate("name", "email@email.ru", "password");
         var response = new RegistrationResponseCreate(1L, "pwd");
         when(service.create(request, 1L)).thenReturn(response);
-        mvc.perform(post("/registrations/1").contentType(MediaType.APPLICATION_JSON)
-                .characterEncoding(StandardCharsets.UTF_8.name())
+        mvc.perform(post("/registrations/{id}", 1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .characterEncoding(StandardCharsets.UTF_8)
                 .content(mapper.writeValueAsString(request))).andExpect(status().isOk());
 
     }
@@ -84,8 +85,7 @@ public class RegistrationRestControllerTest {
                         .mapToObj(o1 -> new RegistrationResponseGet("ev" + o1, "em@ml.ru" + o1, "pass" + o1, 1L))
                         .toList()
         );
-        mvc.perform(get("/registrations?eventId=1&page=1&size=10").contentType(MediaType.APPLICATION_JSON)
-                .characterEncoding(StandardCharsets.UTF_8.name())).andExpect(status().isOk());
+        mvc.perform(get("/registrations?eventId=1&page=1&size=10")).andExpect(status().isOk());
 
     }
 

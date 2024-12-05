@@ -1,6 +1,8 @@
 package aleksey.registration;
 
 
+import aleksey.registration.client.UserClient;
+import aleksey.registration.client.dto.UserOutDto;
 import aleksey.registration.dto.request.RegistrationRequestCreate;
 import aleksey.registration.dto.request.RegistrationRequestDelete;
 import aleksey.registration.dto.request.RegistrationRequestPatch;
@@ -18,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -30,6 +33,7 @@ import java.util.stream.IntStream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @Testcontainers
@@ -46,11 +50,14 @@ public class RegistrationServiceTest {
     @Autowired
     private RegistrationService registrationService;
     private final EntityManager em;
+    @MockBean
+    private UserClient userClient;
 
 
     @Test
     @Order(1)
     void createRegistrationTest() {
+        when(userClient.createUser(any())).thenReturn(UserOutDto.builder().id(5L).build());
         var create = this.registrationService.create(
                 new RegistrationRequestCreate("name", "email@email", "89999999"), 1L
 
@@ -61,6 +68,7 @@ public class RegistrationServiceTest {
     @Test
     @Order(2)
     void updateRegistrationTest() {
+        when(userClient.createUser(any())).thenReturn(UserOutDto.builder().id(5L).build());
         var create = this.registrationService.create(
                 new RegistrationRequestCreate("name2", "email@email2", "899999992"), 1L
         );
@@ -76,6 +84,7 @@ public class RegistrationServiceTest {
     @Test
     @Order(3)
     void getRegistrationTest() {
+        when(userClient.createUser(any())).thenReturn(UserOutDto.builder().id(5L).build());
         var create = this.registrationService.create(
                 new RegistrationRequestCreate("name3", "email@email3", "899999993"), 1L
         );
@@ -91,6 +100,7 @@ public class RegistrationServiceTest {
     @Test
     @Order(4)
     void getAllRegistrationsTest() {
+        when(userClient.createUser(any())).thenReturn(UserOutDto.builder().id(5L).build());
         var createsRegistration = IntStream.range(0, 5)
                 .mapToObj(i -> this.registrationService.create(
                         new RegistrationRequestCreate("name3" + i, "email@email3" + i, "899999993" + i), 2L
@@ -104,6 +114,7 @@ public class RegistrationServiceTest {
     @Test
     @Order(5)
     void deleteRegistrationTest() {
+        when(userClient.createUser(any())).thenReturn(UserOutDto.builder().id(5L).build());
         var create = this.registrationService.create(
                 new RegistrationRequestCreate("name3d", "email@email3d", "899999993d"), 1L
         );
