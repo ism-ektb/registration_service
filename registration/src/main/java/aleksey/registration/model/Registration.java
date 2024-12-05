@@ -22,6 +22,8 @@ public class Registration {
     private Long id;
     @Column(name = "user_name")
     private String username;
+    @Column(name = "user_id")
+    private Long userId;
     @Column(name = "email")
     private String email;
     @Column(name = "phone")

@@ -26,7 +26,7 @@ public class RegistrationController {
     @Operation(description = "создание регистрации (в ответ возвращается номер заявки и четырехзначный пароль доступа)")
     @PostMapping("/{eventId}")
     public RegistrationResponseCreate create(@RequestBody @Valid RegistrationRequestCreate registrationRequestCreate,
-                                             @PathVariable Long eventId) {
+                                             @PathVariable(name = "eventId") long eventId) {
 
         return registrationService.create(registrationRequestCreate, eventId);
     }
@@ -48,9 +48,9 @@ public class RegistrationController {
     @Operation(description = "получение списка регистраций с пагинацией и с обязательным указанием id события" +
             " (не возвращается номер заявки и пароль)")
     @GetMapping
-    public List<RegistrationResponseGet> getAll(@RequestParam Long eventId,
-                                                @RequestParam(defaultValue = "1") Integer page,
-                                                @RequestParam(defaultValue = "100") Integer size) {
+    public List<RegistrationResponseGet> getAll(@RequestParam long eventId,
+                                                @RequestParam(name = "page", defaultValue = "1") Integer page,
+                                                @RequestParam(name = "size", defaultValue = "100") Integer size) {
         return registrationService.getAll(eventId, page, size);
     }
 
