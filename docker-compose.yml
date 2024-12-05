@@ -16,6 +16,7 @@ services:
       - POSTGRES_PASSWORD=registration
       - POSTGRES_USER=registration
       - POSTGRES_DB=registration
+      - USER_SERVICE=http://51.250.41.207:8081
 
 
   web-registration:
