@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-@FeignClient(value = "userClient", url = "http://51.250.41.207:8081")
+@FeignClient(value = "userClient", url = "${user_service}")
 public interface UserClient {
     @RequestMapping(method = RequestMethod.POST, value = "/users")
     UserOutDto createUser(@RequestBody UserInDto userInDto);
