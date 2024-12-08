@@ -1,7 +1,10 @@
 package aleksey.registration.service;
 
+import aleksey.registration.client.EventClient;
 import aleksey.registration.client.UserClient;
+import aleksey.registration.client.dto.EventDto;
 import aleksey.registration.client.dto.UserOutDto;
+import aleksey.registration.client.dto.event.OrganizerDto;
 import aleksey.registration.dto.request.RegistrationRequestCreate;
 import aleksey.registration.dto.request.RegistrationRequestDelete;
 import aleksey.registration.dto.request.RegistrationRequestPatch;
@@ -22,9 +25,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static aleksey.registration.model.RegistrationState.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -35,6 +41,8 @@ public class RegistrationService {
     private final RegistrationRepository registrationRepository;
     @Autowired
     private UserClient userClient;
+    @Autowired
+    private EventClient eventClient;
     private final UserMapper userMapper;
 
 
@@ -49,7 +57,18 @@ public class RegistrationService {
             if (e.status() == 409) {
                 log.warn("Пользователь с логином {} или email {} уже зарегистрирован в user-service",
                         registration.getUsername(), registration.getEmail());
-            } else throw new RuntimeException("Ошибка сохранения в User service");
+            } else log.warn("Ошибка сохранения в User service");
+        }
+        try {
+            eventClient.getEvent(1L, eventId);
+        } catch (FeignException e) {
+            if (e.status() == 404) {
+                throw new NoFoundObjectException("Номер мероприятия не верен");
+            } else {
+                log.warn(e.status() + e.getMessage());
+                throw new BaseRelationshipException("Невозможно проверить входные данные, " +
+                        "повторите попытку");
+            }
         }
         registration.setUserId(newUser.getId());
         Registration registration1 = registrationRepository.save(registration);
@@ -93,13 +112,21 @@ public class RegistrationService {
     public void delete(final RegistrationRequestDelete registrationRequestDelete) {
         Registration registration = registrationRepository.findById(registrationRequestDelete.getId())
                 .orElseThrow(() -> new NoFoundObjectException("registration not found"));
+        EventDto eventDto = new EventDto();
+        try {
+            eventDto = eventClient.getEvent(1L, registration.getEventId());
+        } catch (FeignException e) {
+            throw new BaseRelationshipException("Ошибка доступа к базе данных событий. Повторите попытку");
+        }
+        if (registration.getState() == APPROVED && eventDto.getStartDateTime().isBefore(LocalDateTime.now()))
+            throw new BaseRelationshipException("Нельзя отменить заявку на уже начавшееся мероприятие");
         if (registration.getPassword().equals(registrationRequestDelete.getPassword())) {
             registrationRepository.deleteById(registrationRequestDelete.getId());
             List<Registration> registrations = registrationRepository
-                    .findAllByEventIdAndStateOrderByCreatedDateTime(registration.getEventId(), RegistrationState.WAITING);
+                    .findAllByEventIdAndStateOrderByCreatedDateTime(registration.getEventId(), WAITING);
             if (!registrations.isEmpty()) {
                 Registration updatedRegistration = registrations.get(0);
-                updatedRegistration.setState(RegistrationState.PENDING);
+                updatedRegistration.setState(PENDING);
                 registrationRepository.save(updatedRegistration);
             }
         } else {
@@ -115,32 +142,60 @@ public class RegistrationService {
         }
     }
 
+    /**
+     * Изменение статуса заявок организатором
+     * @param userId Id организатора
+     * @param status новый статус заявки
+     * @param registrationIds Номера заявок
+     * @param description Описание проблемы
+     * @return
+     */
     @Transactional
     public List<RegistrationResponsePatch> changeOfStateByResponsibleUser(long userId,
                                                                     RegistrationState status,
                                                                     List<Long> registrationIds,
                                                                     RegistrationRequestPatch description) {
-        if (status.equals(RegistrationState.CANCELED)) {
+        List<Registration> registrations = registrationRepository.findAllById(registrationIds);
+        if (registrations.isEmpty()) throw new BaseRelationshipException("Номера заявок не валидны");
+        long eventId = 0;
+        for (int i = 0; i < registrations.size(); i++) {
+            if (i == 0) eventId = registrations.get(i).getEventId();
+            else {
+                if (eventId != registrations.get(i).getEventId()) throw new BaseRelationshipException("Заявки на " +
+                        "разные мероприятия");
+            }
+        }
+        List<OrganizerDto> orgList = new ArrayList<>();
+        try {
+            orgList = eventClient.findOrganizer(1L, eventId);
+        } catch (FeignException e) {
+            throw new NoFoundObjectException("Нет доступа к списку организаторов");
+        }
+        List<Long> orgListId = orgList.stream().map(a -> a.getUserId()).collect(Collectors.toList());
+        if (!(orgListId.contains(userId))) throw new BaseRelationshipException("Пользователь " +
+                "не является организатором мероприятия");
+
+        if (status.equals(CANCELED)) {
             if (description == null ||  description.getDescription().isEmpty()) {
                 throw new RuntimeException("При отмене заявки нельзя не указывать причину");
             }
         }
-        List<Registration> registrations = registrationRepository.findAllById(registrationIds);
+
         List<RegistrationResponsePatch> responses = new ArrayList<>();
         for (Registration registration : registrations) {
             registration.setState(status);
             switch (status) {
                 case APPROVED -> responses.add(RegistrationResponsePatch.builder()
                         .registrationId(registration.getId())
-                        .state(RegistrationState.APPROVED)
+                        .state(APPROVED)
                         .build());
                 case WAITING -> responses.add(RegistrationResponsePatch.builder()
                         .registrationId(registration.getId())
-                        .state(RegistrationState.WAITING)
+                        .state(WAITING)
                         .build());
                 case CANCELED -> responses.add(RegistrationResponsePatch.builder()
                         .registrationId(registration.getId())
-                        .state(RegistrationState.CANCELED)
+                        .state(CANCELED)
                         .description(description.getDescription())
                         .build());
             }
@@ -150,6 +205,7 @@ public class RegistrationService {
     }
 
     public List<RegistrationResponseGetStates> getWithStates(long userId, List<RegistrationState> states, Long eventId) {
+
         return registrationRepository.findAllByEventIdAndStateInOrderByCreatedDateTime(eventId, states).stream()
                 .map(RegistrationMapper::mapGetStatuses)
                 .collect(Collectors.toList());

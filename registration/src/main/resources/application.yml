@@ -1,6 +1,7 @@
 server:
   port: 8085
 user_service: ${USER_SERVICE:#{"http://51.250.41.207:8081"}}
+event_service: ${EVENT_SERVICE:#{"http://51.250.41.207:8082"}}
 
 spring:
   datasource:

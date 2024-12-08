@@ -1,8 +1,11 @@
 package aleksey.registration;
 
 
+import aleksey.registration.client.EventClient;
 import aleksey.registration.client.UserClient;
 import aleksey.registration.client.dto.UserOutDto;
+import aleksey.registration.client.dto.EventDto;
+import aleksey.registration.client.dto.event.OrganizerDto;
 import aleksey.registration.dto.request.RegistrationRequestCreate;
 import aleksey.registration.dto.request.RegistrationRequestDelete;
 import aleksey.registration.dto.request.RegistrationRequestPatch;
@@ -52,6 +55,8 @@ public class RegistrationServiceTest {
     private final EntityManager em;
     @MockBean
     private UserClient userClient;
+    @MockBean
+    private EventClient eventClient;
 
 
     @Test
@@ -127,6 +132,9 @@ public class RegistrationServiceTest {
 
     @Test
     void changeState() {
+        when(eventClient.getEvent(anyLong(), anyLong())).thenReturn(EventDto.builder().id(1L).build());
+        when(eventClient.findOrganizer(anyLong(), anyLong())).thenReturn(List.of(OrganizerDto.builder()
+                .eventId(1L).userId(1L).build()));
         Registration registration = Registration.builder()
                 .username("Ivan")
                 .email("aaaa@ya.ru")

@@ -35,3 +35,4 @@ services:
       - SPRING_DATASOURCE_USERNAME=registration
       - SPRING_DATASOURCE_PASSWORD=registration
       - USER_SERVICE=http://51.250.41.207:8081
+      - EVENT_SERVICE=http://51.250.41.207:8082
