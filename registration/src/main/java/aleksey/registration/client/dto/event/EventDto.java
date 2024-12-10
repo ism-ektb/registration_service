@@ -18,4 +18,6 @@ public class EventDto {
     private String endDateTime;
     private LocationDto location;
     private Long ownerId;
+    private String registrationStatus;
+    private Long plimit;
 }

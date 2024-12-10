@@ -70,6 +70,9 @@ public class RegistrationService {
                         "повторите попытку");
             }
         }
+        EventDto event = eventClient.getEvent(1L, eventId);
+        if (event != null && !event.getRegistrationStatus().equals("открыта"))
+            throw new NoFoundObjectException("Регистрация на мероприятие " + eventId + " не производится.");
         registration.setUserId(newUser.getId());
         Registration registration1 = registrationRepository.save(registration);
         return RegistrationMapper.mapCreate(
