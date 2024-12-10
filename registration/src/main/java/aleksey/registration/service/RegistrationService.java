@@ -183,9 +183,18 @@ public class RegistrationService {
                 throw new RuntimeException("При отмене заявки нельзя не указывать причину");
             }
         }
-
+        Long plimit = 0L;
+        try {
+            plimit = eventClient.getEvent(1L, eventId).getPlimit();
+            if (plimit == null) plimit = 0L;
+        } catch (Exception e) {
+            throw new NoFoundObjectException("Не существует события с номером " + eventId);
+        }
         List<RegistrationResponsePatch> responses = new ArrayList<>();
         for (Registration registration : registrations) {
+            if (status.equals(APPROVED) && plimit <= 0)
+                    status = WAITING;
+            plimit--;
             registration.setState(status);
             switch (status) {
                 case APPROVED -> responses.add(RegistrationResponsePatch.builder()
